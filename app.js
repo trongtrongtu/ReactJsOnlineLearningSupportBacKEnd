@@ -3,6 +3,7 @@ const app = express();
 const _findIndex = require('lodash/findIndex') // npm install lodash --save
 const _map = require('lodash/map');
 const server = require('http').Server(app);
+let User = require('./models/UserModel');
 const port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3001);
 const io = require('socket.io')(server);
 server.listen(port, () => console.log('Server running in port ' + port));
@@ -55,6 +56,8 @@ io.on('connection', function (socket) {
             userName: data.user.name,
             time: data.timeM
         })
+        let chatMessage = new User({ username: data.user.name, message: data.data });
+        chatMessage.save();
         //gửi lại tin nhắn cho tất cả các user dang online
         io.sockets.emit('newMessage', {
             data: data.data,
