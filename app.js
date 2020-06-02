@@ -20,7 +20,29 @@ const messages = [];
 let roomName = '';
 let ids = _map(messages, 'id');
 let max = Math.max(...ids);
+/**
+ * Connect DB:
+ Step 1:
+ -Mở mogoDB:
+ mongo --port 27017
 
+ -Tạo Database có tên DBReact trong robo3t sau đó sử dụng câu lệnh:
+ use DBReact
+
+ -Sau đó tiếp tục dùng câu lệnh để tạo user và password:
+ db.createUser({
+   user: "admin",
+   pwd: "admin",
+   roles: [ "readWrite", "dbAdmin", "dbOwner" ]
+ })
+
+ Step 2:
+ -Kết nối mongdDB:
+
+ mongo --port 27017 -u "admin" -p "admin" --authenticationDatabase "DBReact"
+
+-Kết nối thành công sẽ hiển thị trên terminal "connect DB successfully"
+ */
 var mongoose = require('mongoose');
 let options = {
     db: { native_parser: true },
