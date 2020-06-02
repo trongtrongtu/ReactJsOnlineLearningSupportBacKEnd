@@ -10,10 +10,12 @@ var UserSchema = new Schema({
         type: String,
     },
     created_date: {
-        type: Date,
-        default: Date.now
+        type: String,
     },
     usernamefriend: {
+        type: String,
+    },
+    roomName: {
         type: String,
     }
 });

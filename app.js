@@ -17,6 +17,7 @@ var bodyParser = require('body-parser');
 
 const userOnline = []; //danh sách user dang online
 const messages = [];
+let roomName = '';
 let ids = _map(messages, 'id');
 let max = Math.max(...ids);
 
@@ -56,7 +57,12 @@ io.on('connection', function (socket) {
             userName: data.user.name,
             time: data.timeM
         })
-        let chatMessage = new User({ username: data.user.name, message: data.data });
+        let chatMessage = new User({
+            username: data.user.name,
+            message: data.data,
+            created_date: data.timeM,
+            roomName: roomName
+        });
         chatMessage.save();
         //gửi lại tin nhắn cho tất cả các user dang online
         io.sockets.emit('newMessage', {
@@ -64,6 +70,9 @@ io.on('connection', function (socket) {
             user: data.user,
             timeM: data.timeM
         });
+    })
+    socket.on('createRoom', data => {
+        roomName = data.room
     })
     //lắng nghe khi có người login
     socket.on('login', data => {
