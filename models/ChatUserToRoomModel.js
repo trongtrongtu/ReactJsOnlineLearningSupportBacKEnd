@@ -1,22 +1,19 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var UserSchema = new Schema({
+var ChatUserToRoomSchema = new Schema({
     username: {
         type: String,
     },
-    password: {
+    message: {
         type: String,
     },
-    dia_chi: {
+    created_date: {
         type: String,
     },
-    gioi_tinh: {
-        type: String,
-    },
-    ngay_sinh: {
+    roomName: {
         type: String,
     }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('ChatUserToRoom', ChatUserToRoomSchema);
