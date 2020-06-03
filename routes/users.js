@@ -2,14 +2,14 @@ var router = global.router;
 let User = require('../models/UserModel');
 var mongoose = require('mongoose');
 
-router.get('/list_all_messages', (request, response) => {
-  let username = request.query.username
-  User.find({ username }).limit(100).sort({ name: 1 }).select({
+router.get('/list_all_users', (request, response) => {
+  User.find({}).limit(100).sort({ name: 1 }).select({
     _id: 1,
     username: 1,
-    message: 1,
-    created_date: 1,
-    usernamefriend: 1,
+    password: 1,
+    dia_chi: 1,
+    gioi_tinh: 1,
+    ngay_sinh: 1,
   }).exec((err, users) => {
     if (err) {
       response.json({
@@ -21,17 +21,19 @@ router.get('/list_all_messages', (request, response) => {
       response.json({
         result: "ok",
         data: users,
-        messege: "Query myaccount successfully"
+        messege: "Query users successfully"
       });
     }
   });
 });
 
-router.post('/insert_new_message', (request, response) => {
+router.post('/insert_new_user', (request, response) => {
   const newUser = new User({
     username: request.query.username,
-    message: request.query.message,
-    usernamefriend: request.query.usernamefriend,
+    password: request.query.password,
+    dia_chi: request.query.dia_chi,
+    gioi_tinh: request.query.gioi_tinh,
+    ngay_sinh: request.query.ngay_sinh,
   });
   newUser.save((err) => {
     debugger;
@@ -47,8 +49,10 @@ router.post('/insert_new_message', (request, response) => {
         result: "ok",
         data: {
           username: request.query.username,
-          message: request.query.message,
-          usernamefriend: request.query.usernamefriend,
+          password: request.query.password,
+          dia_chi: request.query.dia_chi,
+          gioi_tinh: request.query.gioi_tinh,
+          ngay_sinh: request.query.ngay_sinh,
           messege: "Insert new user successfully"
         }
       });
