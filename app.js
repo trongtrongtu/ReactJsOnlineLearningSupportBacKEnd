@@ -10,6 +10,8 @@ server.listen(port, () => console.log('Server running in port ' + port));
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var room = require('./routes/room');
+var message = require('./routes/users');
 var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -126,6 +128,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users);
+app.use('/room', room);
+app.use('/message', message);
 app.use('/', index);
 
 app.use(function (req, res, next) {

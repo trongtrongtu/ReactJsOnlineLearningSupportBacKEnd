@@ -112,7 +112,6 @@ router.post('/register', (request, response) => {
             messege: `Error is : ${err}`
           });
         } else {
-          console.log(request.query.usernamefriend)
           response.json({
             result: "ok",
             data: {
