@@ -16,7 +16,13 @@ var UserSchema = new Schema({
     },
     ngay_sinh: {
         type: String,
-    }
+    },
+    email: {
+        type: String,
+    },
+    sdt: {
+        type: String,
+    },
 });
 
 module.exports = mongoose.model('User', UserSchema);
