@@ -87,7 +87,6 @@ router.post('/register', (request, response) => {
     username: 1
   }).exec((err, users) => {
     if (users.length == 1) {
-      count = 1;
       response.json({
         result: "failed",
         data: users,

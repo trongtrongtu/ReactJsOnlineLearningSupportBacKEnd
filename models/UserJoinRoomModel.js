@@ -7,10 +7,7 @@ var UserJoinRoomSchema = new Schema({
     },
     roomNameJoin: {
         type: String,
-    },
-    passwordRoom: {
-        type: String,
-    },
+    }
 });
 
 module.exports = mongoose.model('UserJoinRoom', UserJoinRoomSchema);
