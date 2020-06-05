@@ -82,7 +82,6 @@ router.get('/message_with_user_to_room', (request, response) => {
                 for (let i = 0; i < messages.length; i++) {
                     if (messages[i].roomName == request.query.roomName) {
                         messageWithRoom.push({
-                            id: max + 1,
                             username: messages[i].username,
                             message: messages[i].message,
                             created_date: messages[i].created_date,
@@ -92,9 +91,9 @@ router.get('/message_with_user_to_room', (request, response) => {
                 }
                 if (messageWithRoom.length == 0) {
                     response.json({
-                        result: "failed_MessageWithFriend",
+                        result: "failed_MessageWithRoom",
                         data: messageWithRoom,
-                        messege: "User haven't message with friend"
+                        messege: "User haven't message with room"
                     });
                 } else {
                     response.json({
