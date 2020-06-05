@@ -45,6 +45,72 @@ router.get('/list_all_users_join_room', (request, response) => {
         }
     });
 });
+router.get('/list_all_users_with_room', (request, response) => {
+    let roomNameJoin = request.query.roomNameJoin;
+    UserJoinRoom.find({ roomNameJoin }).limit(100).sort({ name: 1 }).select({
+        _id: 1,
+        username: 1,
+        roomNameJoin: 1,
+    }).exec((err, joinrooms) => {
+        if (err) {
+            response.json({
+                result: "failed",
+                data: [],
+                messege: `Error is : ${err}`
+            });
+        } else {
+            response.json({
+                result: "ok",
+                data: joinrooms,
+                messege: "Query room successfully"
+            });
+        }
+    });
+});
+router.get('/user_create_room', (request, response) => {
+    let roomNameCreate = request.query.roomName;
+    CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({
+        _id: 1,
+        username: 1,
+        roomNameCreate: 1,
+    }).exec((err, createrooms) => {
+        if (err) {
+            response.json({
+                result: "failed",
+                data: [],
+                messege: `Error is : ${err}`
+            });
+        } else {
+            response.json({
+                result: "ok",
+                data: createrooms,
+                messege: "Query room successfully"
+            });
+        }
+    });
+});
+router.get('/list_all_rooms_with_user', (request, response) => {
+    let username = request.query.username;
+    UserJoinRoom.find({ username }).limit(100).sort({ name: 1 }).select({
+        _id: 1,
+        username: 1,
+        roomNameJoin: 1,
+    }).exec((err, joinrooms) => {
+        if (err) {
+            response.json({
+                result: "failed",
+                data: [],
+                messege: `Error is : ${err}`
+            });
+        } else {
+            response.json({
+                result: "ok",
+                data: joinrooms,
+                messege: "Query room successfully"
+            });
+        }
+    });
+});
 
 router.post('/create_room', (request, response) => {
     let roomNameCreate = request.query.roomNameCreate;
