@@ -3,13 +3,15 @@ const app = express();
 const _findIndex = require('lodash/findIndex') // npm install lodash --save
 const _map = require('lodash/map');
 const server = require('http').Server(app);
-let User = require('./models/UserModel');
+let ChatUserToRoom = require('./models/ChatUserToRoomModel');
 const port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3001);
 const io = require('socket.io')(server);
 server.listen(port, () => console.log('Server running in port ' + port));
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var room = require('./routes/room');
+var message = require('./routes/message');
 var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -79,7 +81,7 @@ io.on('connection', function (socket) {
             userName: data.user.name,
             time: data.timeM
         })
-        let chatMessage = new User({
+        let chatMessage = new ChatUserToRoom({
             username: data.user.name,
             message: data.data,
             created_date: data.timeM,
@@ -126,6 +128,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users);
+app.use('/room', room);
+app.use('/message', message);
 app.use('/', index);
 
 app.use(function (req, res, next) {
