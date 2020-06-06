@@ -8,6 +8,7 @@ const port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3001);
 const io = require('socket.io')(server);
 server.listen(port, () => console.log('Server running in port ' + port));
 
+var cors = require('cors');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var room = require('./routes/room');
@@ -125,6 +126,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users);

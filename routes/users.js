@@ -43,12 +43,14 @@ router.get('/login', (request, response) => {
       });
     } else if (users.length == 0) {
       response.json({
-        result: "failed",
+        result: "failed_login",
+        data: users,
         messege: "Query check of login failed"
       });
     } else {
       response.json({
         result: "ok",
+        data: users,
         messege: "Query check of login successfully"
       });
     }
