@@ -24,7 +24,7 @@ router.get('/list_all_createroom', (request, response) => {
         }
     });
 });
-router.get('/list_all_users_join_room', (request, response) => {
+router.get('/list_all_users_join_room', (request, response) => {  //  
     UserJoinRoom.find({}).limit(100).sort({ name: 1 }).select({
         _id: 1,
         username: 1,
@@ -45,7 +45,7 @@ router.get('/list_all_users_join_room', (request, response) => {
         }
     });
 });
-router.get('/list_all_users_with_room', (request, response) => {
+router.get('/list_all_users_with_room', (request, response) => {  // tra ve toan bo user trong room
     let roomNameJoin = request.query.roomNameJoin;
     UserJoinRoom.find({ roomNameJoin }).limit(100).sort({ name: 1 }).select({
         _id: 1,
@@ -89,7 +89,7 @@ router.get('/user_create_room', (request, response) => {
         }
     });
 });
-router.get('/list_all_rooms_with_user', (request, response) => {
+router.get('/list_all_rooms_with_user', (request, response) => { 
     let username = request.query.username;
     UserJoinRoom.find({ username }).limit(100).sort({ name: 1 }).select({
         _id: 1,
@@ -112,8 +112,9 @@ router.get('/list_all_rooms_with_user', (request, response) => {
     });
 });
 
-router.post('/create_room', (request, response) => {
-    let roomNameCreate = request.query.roomNameCreate;
+router.post('/create_room', (request, response,next) => {
+    let roomNameCreate = request.body.roomNameCreate;
+    console.log(roomNameCreate);
     CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({
         roomNameCreate: 1
     }).exec((err, createrooms) => {
@@ -122,13 +123,14 @@ router.post('/create_room', (request, response) => {
             response.json({
                 result: "failed",
                 data: createrooms,
-                messege: "Room already exists"
+                messege: "Room already exists "
+               
             });
         } else {
             const newRoom = new CreateRoom({
-                username: request.query.username,
-                roomNameCreate: request.query.roomNameCreate,
-                passwordRoom: request.query.passwordRoom,
+                username: request.body.username,
+                roomNameCreate: request.body.roomNameCreate,
+                passwordRoom: request.body.passwordRoom,
             });
             newRoom.save((err) => {
                 debugger;
@@ -153,25 +155,28 @@ router.post('/create_room', (request, response) => {
         }
     });
 });
-router.post('/join_room', (request, response) => {
-    let roomNameCreate = request.query.roomNameJoin;
+router.post('/join_room', (request, response,next) => { // nhan vao roomNameJoin, username,passwordRoom
+    let roomNameCreate = request.body.roomNameJoin;
+    let passwordRoom =request.body.passwordRoom ;
+    let username = request.body.username ;
+    
     let count = 0;
     CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({
         passwordRoom: 1
     }).exec((err, password) => {
-        if (password[0].passwordRoom != request.query.passwordRoom) {
+        if (password[0].passwordRoom != passwordRoom) {
             response.json({
                 result: "failed_password",
                 data: password,
                 messege: "Password wrong"
             });
         } else {
-            let roomNameJoin = request.query.roomNameJoin;
+            let roomNameJoin = request.body.roomNameJoin;
             UserJoinRoom.find({ roomNameJoin }).limit(100).sort({ name: 1 }).select({
                 username: 1
             }).exec((err, users) => {
                 for (let i = 0; i < users.length; i++) {
-                    if (users[i].username == request.query.username) {
+                    if (users[i].username == username) {
                         count = 1;
                         response.json({
                             result: "failed_joined",
@@ -182,8 +187,8 @@ router.post('/join_room', (request, response) => {
                 }
                 if (count == 0) {
                     const joinRoom = new UserJoinRoom({
-                        username: request.query.username,
-                        roomNameJoin: request.query.roomNameJoin,
+                        username: request.body.username,
+                        roomNameJoin: request.body.roomNameJoin,
                     });
                     joinRoom.save((err) => {
                         debugger;
@@ -197,8 +202,8 @@ router.post('/join_room', (request, response) => {
                             response.json({
                                 result: "ok",
                                 data: {
-                                    username: request.query.username,
-                                    roomNameJoin: request.query.roomNameJoin,
+                                    username: request.body.username,
+                                    roomNameJoin: request.body.roomNameJoin,
                                     messege: "Join room successfully"
                                 }
                             });
