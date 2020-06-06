@@ -112,7 +112,7 @@ router.get('/list_all_rooms_with_user', (request, response) => {
     });
 });
 
-router.post('/create_room', (request, response) => {
+router.get('/create_room', (request, response) => {
     let roomNameCreate = request.query.roomNameCreate;
     CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({
         roomNameCreate: 1
@@ -153,7 +153,7 @@ router.post('/create_room', (request, response) => {
         }
     });
 });
-router.post('/join_room', (request, response) => {
+router.get('/join_room', (request, response) => {
     let roomNameCreate = request.query.roomNameJoin;
     let count = 0;
     CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({

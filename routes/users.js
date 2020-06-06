@@ -83,15 +83,15 @@ router.get('/my_account', (request, response) => {
     }
   });
 });
-router.post('/register', (request, response) => {
+router.get('/register', (request, response) => {
   let username = request.query.username;
   User.find({ username }).limit(100).sort({ name: 1 }).select({
     username: 1
   }).exec((err, users) => {
     if (users.length == 1) {
       response.json({
-        result: "failed",
-        data: users,
+        result: "failed_exists",
+        data: [],
         messege: "username already exists"
       });
     } else {
@@ -123,8 +123,8 @@ router.post('/register', (request, response) => {
               ngay_sinh: request.query.ngay_sinh,
               email: request.query.email,
               sdt: request.query.sdt,
-              messege: "Insert new user successfully"
-            }
+            },
+            messege: "Insert new user successfully"
           });
         }
       });
