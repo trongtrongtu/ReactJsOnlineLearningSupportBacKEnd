@@ -155,56 +155,65 @@ router.post('/create_room', (request, response,next) => {
         }
     });
 });
-router.post('/join_room', (request, response,next) => { // nhan vao roomNameJoin, username,passwordRoom
+router.post('/join_room', (request, response,next) => {
     let roomNameCreate = request.body.roomNameJoin;
-    let passwordRoom =request.body.passwordRoom ;
-    let username = request.body.username ;
-    
+    let roomNameJoin = request.body.roomNameJoin;
     let count = 0;
-    CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({
-        passwordRoom: 1
-    }).exec((err, password) => {
-        if (password[0].passwordRoom != passwordRoom) {
+    UserJoinRoom.find({ roomNameJoin }).limit(100).sort({ name: 1 }).select({
+        username: 1
+    }).exec((err, users) => {
+        if (users.length == 0) {
             response.json({
-                result: "failed_password",
-                data: password,
-                messege: "Password wrong"
+                result: "failed_roomName",
+                data: [],
+                messege: "RoomName wrong"
             });
         } else {
-            let roomNameJoin = request.body.roomNameJoin;
-            UserJoinRoom.find({ roomNameJoin }).limit(100).sort({ name: 1 }).select({
-                username: 1
-            }).exec((err, users) => {
-                for (let i = 0; i < users.length; i++) {
-                    if (users[i].username == username) {
-                        count = 1;
-                        response.json({
-                            result: "failed_joined",
-                            data: password,
-                            messege: "User joined the room"
-                        });
-                    }
-                }
-                if (count == 0) {
-                    const joinRoom = new UserJoinRoom({
-                        username: request.body.username,
-                        roomNameJoin: request.body.roomNameJoin,
+            CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({
+                passwordRoom: 1
+            }).exec((err, password) => {
+                if (password[0].passwordRoom != request.body.passwordRoom) {
+                    response.json({
+                        result: "failed_password",
+                        data: password,
+                        messege: "Password wrong"
                     });
-                    joinRoom.save((err) => {
-                        debugger;
-                        if (err) {
-                            response.json({
-                                result: "failed",
-                                data: {},
-                                messege: `Error is : ${err}`
+                } else {
+                    UserJoinRoom.find({ roomNameJoin }).limit(100).sort({ name: 1 }).select({
+                        username: 1
+                    }).exec((err, users) => {
+                        for (let i = 0; i < users.length; i++) {
+                            if (users[i].username == request.body.username) {
+                                count = 1;
+                                response.json({
+                                    result: "failed_joined",
+                                    data: password,
+                                    messege: "User joined the room"
+                                });
+                            }
+                        }
+                        if (count == 0) {
+                            const joinRoom = new UserJoinRoom({
+                                username: request.body.username,
+                                roomNameJoin: request.body.roomNameJoin,
                             });
-                        } else {
-                            response.json({
-                                result: "ok",
-                                data: {
-                                    username: request.body.username,
-                                    roomNameJoin: request.body.roomNameJoin,
-                                    messege: "Join room successfully"
+                            joinRoom.save((err) => {
+                                debugger;
+                                if (err) {
+                                    response.json({
+                                        result: "failed",
+                                        data: {},
+                                        messege: `Error is : ${err}`
+                                    });
+                                } else {
+                                    response.json({
+                                        result: "ok",
+                                        data: {
+                                            username: request.body.username,
+                                            roomNameJoin: request.body.roomNameJoin,
+                                        },
+                                        messege: "Join room successfully"
+                                    });
                                 }
                             });
                         }
