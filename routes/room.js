@@ -112,8 +112,8 @@ router.get('/list_all_rooms_with_user', (request, response) => {
     });
 });
 
-router.get('/create_room', (request, response) => {
-    let roomNameCreate = request.query.roomNameCreate;
+router.post('/create_room', (request, response) => {
+    let roomNameCreate = request.body.roomNameCreate;
     CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({
         roomNameCreate: 1
     }).exec((err, createrooms) => {
@@ -126,9 +126,9 @@ router.get('/create_room', (request, response) => {
             });
         } else {
             const newRoom = new CreateRoom({
-                username: request.query.username,
-                roomNameCreate: request.query.roomNameCreate,
-                passwordRoom: request.query.passwordRoom,
+                username: request.body.username,
+                roomNameCreate: request.body.roomNameCreate,
+                passwordRoom: request.body.passwordRoom,
             });
             newRoom.save((err) => {
                 debugger;
@@ -142,9 +142,9 @@ router.get('/create_room', (request, response) => {
                     response.json({
                         result: "ok",
                         data: {
-                            username: request.query.username,
-                            roomNameCreate: request.query.roomNameCreate,
-                            passwordRoom: request.query.passwordRoom,
+                            username: request.body.username,
+                            roomNameCreate: request.body.roomNameCreate,
+                            passwordRoom: request.body.passwordRoom,
                             messege: "Create room successfully"
                         }
                     });
@@ -153,9 +153,9 @@ router.get('/create_room', (request, response) => {
         }
     });
 });
-router.get('/join_room', (request, response) => {
-    let roomNameCreate = request.query.roomNameJoin;
-    let roomNameJoin = request.query.roomNameJoin;
+router.post('/join_room', (request, response) => {
+    let roomNameCreate = request.body.roomNameJoin;
+    let roomNameJoin = request.body.roomNameJoin;
     let count = 0;
     UserJoinRoom.find({ roomNameJoin }).limit(100).sort({ name: 1 }).select({
         username: 1
@@ -170,7 +170,7 @@ router.get('/join_room', (request, response) => {
             CreateRoom.find({ roomNameCreate }).limit(100).sort({ name: 1 }).select({
                 passwordRoom: 1
             }).exec((err, password) => {
-                if (password[0].passwordRoom != request.query.passwordRoom) {
+                if (password[0].passwordRoom != request.body.passwordRoom) {
                     response.json({
                         result: "failed_password",
                         data: password,
@@ -181,7 +181,7 @@ router.get('/join_room', (request, response) => {
                         username: 1
                     }).exec((err, users) => {
                         for (let i = 0; i < users.length; i++) {
-                            if (users[i].username == request.query.username) {
+                            if (users[i].username == request.body.username) {
                                 count = 1;
                                 response.json({
                                     result: "failed_joined",
@@ -192,8 +192,8 @@ router.get('/join_room', (request, response) => {
                         }
                         if (count == 0) {
                             const joinRoom = new UserJoinRoom({
-                                username: request.query.username,
-                                roomNameJoin: request.query.roomNameJoin,
+                                username: request.body.username,
+                                roomNameJoin: request.body.roomNameJoin,
                             });
                             joinRoom.save((err) => {
                                 debugger;
@@ -207,8 +207,8 @@ router.get('/join_room', (request, response) => {
                                     response.json({
                                         result: "ok",
                                         data: {
-                                            username: request.query.username,
-                                            roomNameJoin: request.query.roomNameJoin,
+                                            username: request.body.username,
+                                            roomNameJoin: request.body.roomNameJoin,
                                         },
                                         messege: "Join room successfully"
                                     });
