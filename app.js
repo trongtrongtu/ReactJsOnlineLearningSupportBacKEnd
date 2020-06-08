@@ -55,12 +55,12 @@ let options = {
 };
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/DBReact', options).then(
+mongoose.connect('mongodb://localhost:27017/DBReact').then(
     () => {
         console.log("connect DB successfully");
     },
     err => {
-        console.log('Connection failed. Error: ${err}');
+        console.log('Connection failed. Error:'+ err);
     }
 );
 

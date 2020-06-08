@@ -24,7 +24,7 @@ router.get('/list_all_createroom', (request, response) => {
         }
     });
 });
-router.get('/list_all_users_join_room', (request, response) => {
+router.get('/list_all_users_join_room', (request, response) => {  //  
     UserJoinRoom.find({}).limit(100).sort({ name: 1 }).select({
         _id: 1,
         username: 1,
@@ -45,7 +45,7 @@ router.get('/list_all_users_join_room', (request, response) => {
         }
     });
 });
-router.get('/list_all_users_with_room', (request, response) => {
+router.get('/list_all_users_with_room', (request, response) => {  // tra ve toan bo user trong room
     let roomNameJoin = request.query.roomNameJoin;
     UserJoinRoom.find({ roomNameJoin }).limit(100).sort({ name: 1 }).select({
         _id: 1,
@@ -89,7 +89,7 @@ router.get('/user_create_room', (request, response) => {
         }
     });
 });
-router.get('/list_all_rooms_with_user', (request, response) => {
+router.get('/list_all_rooms_with_user', (request, response) => { 
     let username = request.query.username;
     UserJoinRoom.find({ username }).limit(100).sort({ name: 1 }).select({
         _id: 1,
@@ -122,7 +122,8 @@ router.post('/create_room', (request, response) => {
             response.json({
                 result: "failed",
                 data: createrooms,
-                messege: "Room already exists"
+                messege: "Room already exists "
+               
             });
         } else {
             const newRoom = new CreateRoom({
