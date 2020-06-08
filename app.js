@@ -86,14 +86,15 @@ io.on('connection', function (socket) {
             username: data.user.name,
             message: data.data,
             created_date: data.timeM,
-            roomName: roomName
+            roomName: data.roomName
         });
         chatMessage.save();
         //gửi lại tin nhắn cho tất cả các user dang online
         io.sockets.emit('newMessage', {
             data: data.data,
             user: data.user,
-            timeM: data.timeM
+            timeM: data.timeM,
+            roomName: data.roomName
         });
     })
     socket.on('createRoom', data => {
