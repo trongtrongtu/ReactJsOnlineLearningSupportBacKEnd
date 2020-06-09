@@ -18,9 +18,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-const userOnline = []; //danh sách user dang online
+let userOnline = []; //danh sách user dang online
 const messages = [];
 let roomName = '';
+let count = 0;
 let ids = _map(messages, 'id');
 let max = Math.max(...ids);
 /**
@@ -60,7 +61,7 @@ mongoose.connect('mongodb://localhost:27017/DBReact').then(
         console.log("connect DB successfully");
     },
     err => {
-        console.log('Connection failed. Error:'+ err);
+        console.log('Connection failed. Error:' + err);
     }
 );
 
@@ -108,12 +109,24 @@ io.on('connection', function (socket) {
         } else {
             // nếu chưa tồn tại thì gửi socket login thành công
             socket.emit('loginSuccess', { data, messages });
-            userOnline.push({
-                id: socket.id,
-                name: data
-            })
+            for (let i = 0; i < userOnline.length; i++) {
+                if (userOnline[i].name == data.username) {
+                    count = 1;
+                    userOnline[i].roomName = data.roomName;
+                }
+            }
+            if (count == 0) {
+                {
+                    userOnline.push({
+                       
+                        name: data.username,
+                        roomName: data.roomName
+                    })
+                }
+            }
             io.sockets.emit('updateUesrList', userOnline);// gửi danh sách user dang online
         }
+        console.log(userOnline)
     })
 
 });
