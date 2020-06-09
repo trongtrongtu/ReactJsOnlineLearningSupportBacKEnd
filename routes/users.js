@@ -132,19 +132,19 @@ router.get('/register', (request, response) => {
   });
 });
 router.put('/update_user', (request, response, next) => {
-  var username = request.query.username;
+  var username = request.body.username;
   var conditions = {};
   User.find({ username }).limit(100).sort({ name: 1 }).select({
     _id: 1
   }).exec((err, users) => {
     conditions._id = users[0]._id;
     let newValues = {
-      username: request.query.username,
-      ngay_sinh: request.query.ngay_sinh,
-      gioi_tinh: request.query.gioi_tinh,
-      email: request.query.email,
-      sdt: request.query.sdt,
-      dia_chi: request.query.dia_chi,
+      username: request.body.username,
+      ngay_sinh: request.body.ngay_sinh,
+      gioi_tinh: request.body.gioi_tinh,
+      email: request.body.email,
+      sdt: request.body.sdt,
+      dia_chi: request.body.dia_chi,
     };
     const options = {
       new: true,
