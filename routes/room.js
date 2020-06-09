@@ -131,6 +131,11 @@ router.post('/create_room', (request, response) => {
                 roomNameCreate: request.body.roomNameCreate,
                 passwordRoom: request.body.passwordRoom,
             });
+            const joinRoom = new UserJoinRoom({
+                username: request.body.username,
+                roomNameJoin: request.body.roomNameCreate,
+            });
+            joinRoom.save();
             newRoom.save((err) => {
                 debugger;
                 if (err) {
