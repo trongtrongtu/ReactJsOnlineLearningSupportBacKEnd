@@ -3,6 +3,7 @@ let User = require('../models/UserModel');
 var mongoose = require('mongoose');
 
 router.get('/list_all_users', (request, response) => {
+  const messageWithUser = [];
   User.find({}).limit(100).sort({ name: 1 }).select({
     _id: 1,
     username: 1,
@@ -18,9 +19,16 @@ router.get('/list_all_users', (request, response) => {
         messege: `Error is : ${err}`
       });
     } else {
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].username != request.query.username) {
+          messageWithUser.push({
+            username: users[i].username
+          })
+        }
+      }
       response.json({
         result: "ok",
-        data: users,
+        data: messageWithUser,
         messege: "Query users successfully"
       });
     }
