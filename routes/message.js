@@ -56,9 +56,8 @@ router.get('/message_with_user_to_user', (request, response) => {
     });
 });
 router.get('/message_with_user_to_room', (request, response) => {
-    let username = request.query.username;
-    const messageWithRoom = [];
-    ChatUserToRoom.find({ username }).limit(100).sort({ name: 1 }).select({
+    let roomName = request.query.roomName;
+    ChatUserToRoom.find({ roomName }).limit(100).sort({ name: 1 }).select({
         _id: 1,
         username: 1,
         message: 1,
@@ -76,32 +75,14 @@ router.get('/message_with_user_to_room', (request, response) => {
                 response.json({
                     result: "failed_message",
                     data: messages,
-                    messege: "User haven't message"
+                    messege: "Room haven't message"
                 });
             } else {
-                for (let i = 0; i < messages.length; i++) {
-                    if (messages[i].roomName == request.query.roomName) {
-                        messageWithRoom.push({
-                            username: messages[i].username,
-                            message: messages[i].message,
-                            created_date: messages[i].created_date,
-                            roomName: messages[i].roomName
-                        })
-                    }
-                }
-                if (messageWithRoom.length == 0) {
-                    response.json({
-                        result: "failed_MessageWithRoom",
-                        data: messageWithRoom,
-                        messege: "User haven't message with room"
-                    });
-                } else {
-                    response.json({
-                        result: "ok",
-                        data: messageWithRoom,
-                        messege: "Query room successfully"
-                    });
-                }
+                response.json({
+                    result: "ok",
+                    data: messages,
+                    messege: "Query room successfully"
+                });
             }
         }
     });
