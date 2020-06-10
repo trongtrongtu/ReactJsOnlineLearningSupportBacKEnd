@@ -4,6 +4,7 @@ const _findIndex = require('lodash/findIndex') // npm install lodash --save
 const _map = require('lodash/map');
 const server = require('http').Server(app);
 let ChatUserToRoom = require('./models/ChatUserToRoomModel');
+let ChatUserToUser = require('./models/ChatUserToUserModel')
 const port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3001);
 const io = require('socket.io')(server);
 server.listen(port, () => console.log('Server running in port ' + port));
@@ -20,6 +21,7 @@ var bodyParser = require('body-parser');
 
 let userOnline = []; //danh sách user dang online
 const messages = [];
+const messagesFriend = [];
 let roomName = '';
 let count = 0;
 let ids = _map(messages, 'id');
@@ -98,6 +100,29 @@ io.on('connection', function (socket) {
             roomName: data.roomName
         });
     })
+    socket.on('newMessageFriend', data => {
+        messagesFriend.push({
+            id: max + 1,
+            userId: data.user.id,
+            message: data.data,
+            userName: data.user.name,
+            time: data.timeM
+        })
+        let chatMessage = new ChatUserToUser({
+            username: data.user.name,
+            message: data.data,
+            created_date: data.timeM,
+            usernamefriend: data.usernamefriend
+        });
+        chatMessage.save();
+        //gửi lại tin nhắn cho tất cả các user dang online
+        io.sockets.emit('newMessageFriend', {
+            data: data.data,
+            user: data.user,
+            timeM: data.timeM,
+            usernamefriend: data.usernamefriend
+        });
+    })
     socket.on('createRoom', data => {
         roomName = data.room
     })
@@ -118,7 +143,7 @@ io.on('connection', function (socket) {
             if (count == 0) {
                 {
                     userOnline.push({
-                       
+                        id: socket.id,
                         name: data.username,
                         roomName: data.roomName
                     })
