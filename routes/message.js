@@ -4,9 +4,8 @@ let ChatUserToRoom = require('../models/ChatUserToRoomModel');
 var mongoose = require('mongoose');
 
 router.get('/message_with_user_to_user', (request, response) => {
-    let username = request.query.username;
     const messageWithUser = [];
-    ChatUserToUser.find({ username }).limit(100).sort({ name: 1 }).select({
+    ChatUserToUser.find({ }).limit(100).sort({ name: 1 }).select({
         _id: 1,
         username: 1,
         message: 1,
@@ -28,9 +27,15 @@ router.get('/message_with_user_to_user', (request, response) => {
                 });
             } else {
                 for (let i = 0; i < messages.length; i++) {
-                    if (messages[i].usernamefriend == request.query.usernamefriend) {
+                    if (messages[i].usernamefriend == request.query.usernamefriend && messages[i].username == request.query.username) {
                         messageWithUser.push({
-                            id: max + 1,
+                            username: messages[i].username,
+                            message: messages[i].message,
+                            created_date: messages[i].created_date,
+                            usernamefriend: messages[i].usernamefriend
+                        })
+                    } else if (messages[i].username == request.query.usernamefriend && messages[i].usernamefriend == request.query.username) {
+                        messageWithUser.push({
                             username: messages[i].username,
                             message: messages[i].message,
                             created_date: messages[i].created_date,

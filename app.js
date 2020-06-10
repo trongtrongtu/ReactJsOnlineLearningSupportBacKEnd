@@ -137,6 +137,7 @@ io.on('connection', function (socket) {
             for (let i = 0; i < userOnline.length; i++) {
                 if (userOnline[i].name == data.username) {
                     count = 1;
+                    userOnline[i].id = socket.id;
                     userOnline[i].roomName = data.roomName;
                 }
             }
